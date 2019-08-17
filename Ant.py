@@ -5,26 +5,28 @@
 """
 
 import random
-from config import *
 
-from Sprites import SpriteAnimation
 from GA.Chromosome import Chromosome
+
+import config
+import shared
+from Sprites import SpriteAnimation
 
 class Ant(Chromosome):
     """ The ant creature class. """
     
-    lifespan = LIFE_SPAN                    # the lifespan of the ant creature
+    lifespan = config.LIFE_SPAN                    # the lifespan of the ant creature
     
-    mutation_rate = INIT_MUTATION_RATE      # ant initial mutation rate
+    mutation_rate = config.INIT_MUTATION_RATE      # ant initial mutation rate
     
-    max_force    = MAX_FORCE                # maximum force applied to the ant
-    max_velosity = MAX_VELOSITY             # maximum ant velosity
+    max_force    = config.MAX_FORCE                # maximum force applied to the ant
+    max_velosity = config.MAX_VELOSITY             # maximum ant velosity
 
-    initial_pos = INIT_POSITION             # initial ant position                                             
-    initial_vel = INIT_VELOSITY             # initial ant velosity
-    initial_acc = INIT_ACCELERATION         # initial ant acceleration
+    initial_pos = config.INIT_POSITION             # initial ant position                                             
+    initial_vel = config.INIT_VELOSITY             # initial ant velosity
+    initial_acc = config.INIT_ACCELERATION         # initial ant acceleration
 
-    target = TARGET                         # the target position
+    target = config.TARGET                         # the target position
 
     # the initial distance from the target
     dist_from_target = initial_pos.dist(target)
@@ -55,7 +57,7 @@ class Ant(Chromosome):
         self.gene_index = 0
 
         # the ant sprite animation frames
-        self.animation = SpriteAnimation(FRAMES, FRAME_WIDTH, FRAME_HEIGHT)
+        self.animation = SpriteAnimation(shared.ANIMATION_FRAMES, config.FRAME_WIDTH, config.FRAME_HEIGHT)
 
     @property
     def fitness(self):
@@ -71,8 +73,8 @@ class Ant(Chromosome):
             2- calculate the percentage of the no. remaining genes that were not used.
             
             
-            If the ant made it to the target, fitness = distance_percentage + no_remainig_genes_percentage
-            otherwise,                        fitness = distance_percentage
+            If the ant made it to the target, fitness = (distance_percentage + n_remainig_genes_percentage)/200
+            otherwise,                        fitness = (distance_percentage - (n_remainig_genes_percentage/4.0))/200
             
             so if the ant didn't make it to the target, it's fitness becomes how close it is to the target,
             if it did, it's given a bouns fitness based on the number of steps(genes) it has used to reach the goal. (the fewer the better).
@@ -80,9 +82,9 @@ class Ant(Chromosome):
         current_dist = self.pos.dist(self.target)
         walked_distance = self.dist_from_target-current_dist
         
-        no_remaining_genes = self.genes_length-self.gene_index
+        n_remaining_genes = self.genes_length-self.gene_index
         
-        genes_percentage = (float(no_remaining_genes)/self.genes_length)*100
+        genes_percentage = (float(n_remaining_genes)/self.genes_length)*100
         distance_percentage = (walked_distance/self.dist_from_target)*100
 
         fitness_value = distance_percentage
@@ -90,6 +92,10 @@ class Ant(Chromosome):
         # give it the bouns only if it has reached the target
         if self.reached_target:
             fitness_value += genes_percentage
+        
+        # give it a negative bouns if it has died based on the number of steps it has walked (the more the less)
+        if self.dead:
+            fitness_value -= (genes_percentage/4.0)
         
         fitness_value = (fitness_value/200)
         
@@ -132,7 +138,7 @@ class Ant(Chromosome):
                 self.dead = True
             
             # Ant has touched one of the barriers
-            for barrier in BARRIERS:
+            for barrier in shared.BARRIERS:
                 if barrier.collision(self.pos):
                     self.dead = True
             
@@ -149,12 +155,11 @@ class Ant(Chromosome):
 
         self.gene_index += 1
 
-
     def show(self):
         # Dot animation
         # noStroke()
-        # fill(0)
-        # ellipse(self.pos.x, self.pos.y, 7, 7)
+        # fill(BLACK)
+        # ellipse(self.pos.x, self.pos.y, DOT_RADIUS, DOT_RADIUS)
         
         # Ant animation
         push()
