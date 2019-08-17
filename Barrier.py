@@ -4,12 +4,12 @@
 
 """
 
-from config import BARRIER_COLOR
+import config
 
 class Barrier:
     """ The barrier class implementation. """
-    stroke_weight = 2
-    barrier_color = BARRIER_COLOR
+    stroke_weight = config.BARRIER_STROKE_WEIGHT
+    barrier_color = config.BARRIER_COLOR
     
     def __init__(self, start_point, end_point, barrier_color=barrier_color):
         """ Initialization of the barrier object. It's represented as a line segment."""
