@@ -8,96 +8,93 @@
 import time
 import random
 
-from config import *
-from utilities import sec_to_hms_format
-
 from Ant import Ant
 from AntPopulation import AntPopulation
-
 from Barrier import Barrier
+import config
+import shared
 from Sprites import load_frames
+from utilities import sec_to_hms_format
 
 def setup():
-    global POPULATION, FRAMES, START_TIME
-
     # size of the window
-    size(WIDTH, HEIGHT)
+    size(config.WIDTH, config.HEIGHT)
     
     # background color
-    background(BACKGROUND)
+    background(config.BACKGROUND)
 
     # load the ant animation frames into memory and put them into the FRAMES list
-    FRAMES.extend(load_frames(SPRITE_SHEET, SPRITE_SHEET_DATA)[0])
+    shared.ANIMATION_FRAMES = load_frames(config.SPRITE_SHEET, config.SPRITE_SHEET_DATA)[0]
     
     # Create the initial ant population
-    POPULATION = AntPopulation(population_size=POP_SIZE)
+    shared.POPULATION = AntPopulation(population_size=config.POP_SIZE)
     
     # calculate the start time
-    START_TIME = time.time()
+    shared.START_TIME = time.time()
 
 def draw():
-    background(BACKGROUND)
+    background(config.BACKGROUND)
 
-    # Draw barrieers
-    for barrier in BARRIERS:
-        barrier.show()
-
+    # update the population
+    shared.POPULATION.update()
+    
     # get the best of the current generation
-    best_ant = POPULATION.get_best_individual()
-    worst_ant = POPULATION.get_worst_individual()
+    best_ant = shared.POPULATION.get_best_individual()
+    worst_ant = shared.POPULATION.get_worst_individual()
     
     # draw a green shadow around the current best ant
-    fill(155, 255, 157)
+    fill(config.GREEN)
     noStroke()
-    ellipse(best_ant.pos.x, best_ant.pos.y, 30, 30)
+    ellipse(best_ant.pos.x, best_ant.pos.y, config.SHADOW_RADIUS, config.SHADOW_RADIUS)
 
     # draw a red shadow around the current worst ant
-    fill(255, 155, 157)
-    # fill(155, 157, 255)
+    fill(config.RED)
     noStroke()
-    ellipse(worst_ant.pos.x, worst_ant.pos.y, 30, 30)
+    ellipse(worst_ant.pos.x, worst_ant.pos.y, config.SHADOW_RADIUS, config.SHADOW_RADIUS)
 
-    # Draw the ants population
-    POPULATION.update_and_show()
+    # Draw barrieers
+    for barrier in shared.BARRIERS:
+        barrier.show()
+
+    # Draw the population
+    shared.POPULATION.show()
 
     # Draw the target
-    fill(0)
+    fill(config.TARGET_COLOR)
     noStroke()
-    ellipse(TARGET.x, TARGET.y, 20, 20)
-    fill(50, 100)
-    ellipse(TARGET.x, TARGET.y, 40, 40)
+    ellipse(config.TARGET.x, config.TARGET.y, config.TARGET_RADIUS, config.TARGET_RADIUS)
+    fill(config.TARGET_HUE_COLOR)
+    ellipse(config.TARGET.x, config.TARGET.y, config.TARGET_HUE_RADIUS, config.TARGET_HUE_RADIUS)
     
-    # get which frame is currently playing
-    frame = max(POPULATION.population, key=lambda ant: ant.gene_index).gene_index
-    time_elapsed = sec_to_hms_format(time.time()-START_TIME)
+    # get which frame is currently being displayed (maximum gene_index)
+    frame = max(shared.POPULATION.population, key=lambda ant: ant.gene_index).gene_index
+    time_elapsed = sec_to_hms_format(time.time()-shared.START_TIME)
 
-    # Draw statistics text    
-    fill(0)
-    textSize(15)
+    # Draw statistics text  
+    fill(config.TEXT_COLOR)
+    textSize(config.TEXT_SIZE)
     text("Frame: {}".format(frame), 10, 30)
     text("Lifespan: {}".format(best_ant.lifespan), 10, 50)
-    text("Generation: {}".format(POPULATION.generation_number), 10, 70)
-    text("Population size: {}".format(POPULATION.population_size), 10, 90)
+    text("Generation: {}".format(shared.POPULATION.generation_number), 10, 70)
+    text("Population size: {}".format(shared.POPULATION.population_size), 10, 90)
     text("Max fitness: {}".format(round(best_ant.fitness, 4)), 10, 110)
     text("Time elapsed: {}".format(time_elapsed), 10, 130)
 
 ############################# Adding and removing barriers #############################
 def mouseReleased():
-    barrier_length = BARRIER_START.dist(BARRIER_END)
+    barrier_length = shared.BARRIER_START.dist(shared.BARRIER_END)
     
-    if (barrier_length > MINIMUM_BARRIER_LENGTH and BARRIER_START.x != mouseX):
-        BARRIERS.append(Barrier(BARRIER_START, BARRIER_END))
+    if (barrier_length > config.MINIMUM_BARRIER_LENGTH and shared.BARRIER_START.x != mouseX):
+        shared.BARRIERS.append(Barrier(shared.BARRIER_START, shared.BARRIER_END))
 
 def mousePressed():
-    global BARRIER_START
-    BARRIER_START = PVector(mouseX, mouseY)
+    shared.BARRIER_START = PVector(mouseX, mouseY)
 
 def mouseDragged():
-    global BARRIER_END
-    BARRIER_END = PVector(mouseX, mouseY)
+    shared.BARRIER_END = PVector(mouseX, mouseY)
 
 def keyPressed():
     if (key == BACKSPACE):
-        if len(BARRIERS) != 0:
-            BARRIERS.pop()
+        if len(shared.BARRIERS) != 0:
+            shared.BARRIERS.pop()
 ########################################################################################
