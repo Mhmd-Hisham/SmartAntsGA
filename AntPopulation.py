@@ -4,26 +4,28 @@
 
 """
 
-from Ant import Ant
 from GA.Population import Population
+
+from Ant import Ant
+import config
 
 class AntPopulation(Population):
     """ The ant population class implmentation. """
 
-    # keeps count of how many ants have reached the goal and/or died
+    # counts how many ants have reached the goal/died per frame
     finished_count = 0
     
     # tournament selection sample percentage
-    tournament_sample_percentage = 25
+    tournament_sample_percentage = config.TOURNAMENT_SAMPLE_PERCENTAGE
    
     def random_individual(self):
         """ return a new individual ant for the initialization of the first population. """
         return Ant()
-    
-    def update_and_show(self):
+        
+    def update(self):
+        """ Update the values of each individual in the population. """
         for ant in self.population:
             ant.update()
-            ant.show()
 
             self.finished_count += (ant.reached_target or ant.dead)
     
@@ -34,3 +36,8 @@ class AntPopulation(Population):
         
         # reset counter to zero each time
         self.finished_count = 0
+    
+    def show(self):
+        """ Draw each individual in the population"""
+        for ant in self.population:
+            ant.show()
