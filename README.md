@@ -9,5 +9,7 @@ A genetic algorithm simulation game using [OptivolutionPy](https://github.com/Mh
   1- Download Processing3 IDE from [here](https://processing.org/download/).
 
   2- Install Python mode for Processing3, follow the instructions in [here](https://github.com/jdf/processing.py#python-mode-for-processing).
+  
+  3- Clone this repository and open the SmartAnts directory.
 
-  3- Simply Run SmartAnts.pyde, watch the full [youtube demo](https://youtu.be/f1ZrNOkd1Zw) for more info.
+  4- Simply Run SmartAnts.pyde, watch the full [youtube demo](https://youtu.be/f1ZrNOkd1Zw) for more info.
