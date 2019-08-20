@@ -6,7 +6,7 @@
 
 import random
 
-from GA.Chromosome import Chromosome
+from optivolution.chromosome import Chromosome
 
 import config
 import shared
