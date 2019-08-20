@@ -4,7 +4,7 @@
 
 """
 
-from GA.Population import Population
+from optivolution.population import Population
 
 from Ant import Ant
 import config
