@@ -12,4 +12,4 @@ A genetic algorithm simulation game using [OptivolutionPy](https://github.com/Mh
   
   3- Clone this repository and open the SmartAnts directory.
 
-  4- Simply open SmartAnts.pyde using the Processing IDE & Run the project, watch the full [youtube demo](https://youtu.be/f1ZrNOkd1Zw) for more info.
+  4- Simply open [SmartAnts.pyde](https://github.com/Mhmd-Hisham/SmartAntsGA/blob/master/SmartAnts/SmartAnts.pyde) using the Processing IDE & Run the project, watch the full [youtube demo](https://youtu.be/f1ZrNOkd1Zw) for more info.
