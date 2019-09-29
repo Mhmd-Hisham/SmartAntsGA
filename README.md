@@ -1,7 +1,7 @@
 # SmartAnts
 A genetic algorithm simulation game using [OptivolutionPy](https://github.com/Mhmd-Hisham/OptivolutionPy) & [Processing3](https://processing.org/).
 
-![SmartAntsDemo](https://raw.githubusercontent.com/Mhmd-Hisham/SmartAntsGA/master/SmartAnts.gif)
+[![SmartAntsDemo](https://raw.githubusercontent.com/Mhmd-Hisham/SmartAntsGA/master/SmartAnts.gif)](https://youtu.be/f1ZrNOkd1Zw)
 
 
 
